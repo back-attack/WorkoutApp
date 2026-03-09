@@ -3,7 +3,8 @@
 /* ===================== */
 .week {
   width: 100%;
-  max-width: 420px;
+  /* ensure the week never exceeds the body padding on narrow phones */
+  max-width: calc(100% - 24px);
 
   display: flex;
   justify-content: space-between;
@@ -11,6 +12,14 @@
 
   margin: 16px auto 18px; /* ✅ centers the whole row */
   padding: 0 2px;
+}
+
+/* if the screen is very tight, scale the circles down slightly */
+@media (max-width: 360px) {
+  .week {
+    gap:6px;
+  }
+  .day { width:44px; height:44px; }
 }
 
 
