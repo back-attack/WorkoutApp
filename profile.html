@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile</title>
+
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/header.css">
+  <link rel="stylesheet" href="styles/workouts.css">
+  <style>
+    /* profile-specific styles */
+    .profilePanel {
+      width:100%;
+      max-width:420px;
+      margin:0 auto;
+      padding:24px 18px;
+      background:var(--card);
+      border-radius:26px;
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:22px;
+    }
+    .profileTitle {
+      font-size:22px;
+      font-weight:700;
+      color:var(--accent);
+      margin:0;
+    }
+    #avatarContainer {
+      width:140px;
+      height:140px;
+      border-radius:50%;
+      background:#fff;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 0 20px rgba(0,255,213,0.4);
+      border:4px solid var(--accent);
+    }
+    #avatarContainer svg {
+      width:100%;
+      height:100%;
+    }
+    #profileInfo {
+      width:100%;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+    }
+    .profileItem {
+      flex:1 1 45%;
+      background:var(--card2);
+      padding:10px;
+      border-radius:10px;
+      text-align:center;
+    }
+    .infoLabel {
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .profileChart {
+      width:100%;
+      height:160px;
+      background:rgba(255,255,255,0.05);
+      border-radius:10px;
+      position:relative;
+    }
+    .profileChart .bar {
+      position:absolute;
+      bottom:0;
+      width:10px;
+      background:var(--accent);
+    }
+
+    /* edit modal overlay */
+    #editOverlay {
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+    #editOverlay .modal {
+      background:var(--card);
+      padding:20px;
+      border-radius:12px;
+      width:90%;
+      max-width:320px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    #editOverlay label {
+      font-size:14px;
+      color:var(--text);
+    }
+    #editOverlay input,
+    #editOverlay select {
+      width:100%;
+      padding:8px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,0.15);
+      /* use a light background with dark text so dropdown options are readable */
+      background:#ffffff;
+      color:#000000;
+    }
+    #editOverlay select option {
+      color:#000;
+      background:#fff;
+    }
+    #editOverlay .actions { display:flex; gap:8px; justify-content:flex-end; }
+  </style>
+</head>
+
+<body class="app">
+  <header class="header">
+    <div class="headerNav">
+      <a href="index.html" class="navBack" aria-label="Back to home">←</a>
+      <div class="headerCenter">
+        <img class="logo" src="Designer.png" alt="AI Trainer Logo" />
+      </div>
+      <div class="navRight">
+        <button id="editProfileBtn" class="navIcon" aria-label="Edit Profile">
+          <!-- pencil icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </button>
+        <a href="profile.html" class="navIcon" aria-label="Profile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- edit icon in header right now replaces the week section below -->
+
+  <main class="panel profilePanel">
+    <h2 class="profileTitle">Your Profile</h2>
+    <div id="avatarContainer">
+      <!-- simple avatar SVG for white guy, black hair, brown eyes -->
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="60" fill="#fde0c8"/>
+        <path d="M30 40c0 15 20 15 30 15s30 0 30-15" fill="#000"/>
+        <circle cx="45" cy="60" r="5" fill="#563d23"/>
+        <circle cx="75" cy="60" r="5" fill="#563d23"/>
+      </svg>
+    </div>
+
+    <div id="profileInfo">
+      <div class="profileItem"><div class="infoLabel">Height</div><div id="infoHeight">-</div></div>
+      <div class="profileItem"><div class="infoLabel">Weight</div><div id="infoWeight">-</div></div>
+      <div class="profileItem"><div class="infoLabel">Age</div><div id="infoAge">-</div></div>
+      <div class="profileItem"><div class="infoLabel">Sex</div><div id="infoSex">-</div></div>
+    </div>
+
+    <div id="progressChart" class="profileChart"></div>
+  </main>
+
+  <div id="editOverlay">
+    <div class="modal">
+      <label>Height</label><input type="text" id="editHeight" placeholder="e.g. 5'11" />
+      <label>Weight</label><input type="number" id="editWeight" placeholder="lbs" />
+      <label>Age</label><input type="number" id="editAge" />
+      <label>Sex</label>
+      <select id="editSex"><option value="">select</option><option value="Male">Male</option><option value="Female">Female</option></select>
+      <div class="actions">
+        <button id="cancelEdit" class="actionButton secondary">Cancel</button>
+        <button id="saveEdit" class="actionButton">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // profile page logic
+    function loadProfile() {
+      document.getElementById('infoHeight').textContent = localStorage.getItem('profile_height')||'-';
+      document.getElementById('infoWeight').textContent = localStorage.getItem('profile_weight')||'-';
+      document.getElementById('infoAge').textContent = localStorage.getItem('profile_age')||'-';
+      // sex is stored as simple text
+      document.getElementById('infoSex').textContent = localStorage.getItem('profile_sex')||'-';
+      renderChart();
+    }
+    function renderChart() {
+      const chart = document.getElementById('progressChart');
+      chart.innerHTML = '';
+      const data = JSON.parse(localStorage.getItem('profile_weights')||'[]');
+      if (data.length === 0) {
+        chart.textContent = 'No weight data';
+        chart.style.color = 'var(--muted)';
+        return;
+      }
+      // determine max
+      const max = Math.max(...data.map(d=>d.weight));
+      data.forEach((d,i)=>{
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = (d.weight / max * 100) + '%';
+        bar.style.left = (i * 12 + 8) + 'px';
+        chart.appendChild(bar);
+      });
+    }
+    const editBtn = document.getElementById('editProfileBtn');
+    if (editBtn) {
+      editBtn.addEventListener('click', ()=>{
+        document.getElementById('editOverlay').style.display = 'flex';
+        document.getElementById('editHeight').value = localStorage.getItem('profile_height')||'';
+        document.getElementById('editWeight').value = localStorage.getItem('profile_weight')||'';
+        document.getElementById('editAge').value = localStorage.getItem('profile_age')||'';
+        document.getElementById('editSex').value = localStorage.getItem('profile_sex')||'';
+      });
+    }
+    document.getElementById('cancelEdit').addEventListener('click', ()=>{
+      document.getElementById('editOverlay').style.display = 'none';
+    });
+    document.getElementById('saveEdit').addEventListener('click', ()=>{
+      const h = document.getElementById('editHeight').value;
+      const w = document.getElementById('editWeight').value;
+      const a = document.getElementById('editAge').value;
+      const s = document.getElementById('editSex').value;
+      if (h) localStorage.setItem('profile_height', h);
+      if (w) {
+        localStorage.setItem('profile_weight', w);
+        // add weight point
+        const arr = JSON.parse(localStorage.getItem('profile_weights')||'[]');
+        arr.push({date: new Date().toISOString().slice(0,10), weight: parseFloat(w)});
+        localStorage.setItem('profile_weights', JSON.stringify(arr));
+      }
+      if (a) localStorage.setItem('profile_age', a);
+      if (s) localStorage.setItem('profile_sex', s);
+      document.getElementById('editOverlay').style.display = 'none';
+      loadProfile();
+    });
+    // initialize
+    loadProfile();
+
+    // ensure old button if still present
+    const old = document.getElementById('editProfile');
+    if (old) old.remove();
+  </script>
+</body>
+</html>

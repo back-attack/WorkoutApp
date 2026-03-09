@@ -1,0 +1,436 @@
+/* ===================== */
+/* WEEK CIRCLES */
+/* ===================== */
+.week {
+  width: 100%;
+  max-width: 420px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin: 16px auto 18px; /* ✅ centers the whole row */
+  padding: 0 2px;
+}
+
+
+.day{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background: rgba(255,255,255,0.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  color:#aab6ff;
+  font-weight:700;
+  font-size:13px;
+  user-select:none;
+}
+
+.day.today{
+  outline:2px solid rgba(255,255,255,0.85);
+  outline-offset:3px;
+}
+
+.day.done{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#001018;
+  box-shadow:0 0 16px rgba(0,255,213,0.65);
+}
+
+.day .check{
+  position:absolute;
+  right:-2px;
+  bottom:-2px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,0.55);
+  color:var(--accent);
+  font-size:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  opacity:0;
+  transform:scale(0.9);
+}
+
+/* flavored checkmarks for nutrition */
+.day .check.breakfast {
+  background: transparent; /* remove circle background */
+  color: #2e7d32; /* darker green checkmark */
+  border: none;
+  /* right side, left-most comma */
+  right: -6px;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.day .check.dinner {
+  background: transparent;
+  color: #1565c0; /* darker blue checkmark */
+  border: none;
+  /* right side, right-most comma */
+  right: -2px;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+/* show all checks when class present */
+.day.breakfast .check.breakfast,
+.day.dinner .check.dinner,
+.day.done .check {
+  opacity:1;
+  transform:scale(1);
+}
+.day.done .check{
+  opacity:1;
+  transform:scale(1);
+}
+
+/* ===================== */
+/* MAIN WORKOUT PANEL */
+/* ===================== */
+.panel{
+  width:100%;
+  max-width:420px;
+  margin: 0 auto;
+  background:var(--card);
+  border-radius:26px;
+  padding:18px;
+  backdrop-filter:blur(12px);
+  box-shadow:var(--shadow);
+}
+
+.panelHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.panelTitle{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.panelMeta{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.pill{
+  background: rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.10);
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:12px;
+  color: rgba(255,255,255,0.85);
+}
+
+/* ===================== */
+/* WORKOUT BLOCKS */
+/* ===================== */
+.blocks{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.block{
+  background:var(--card2);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:14px;
+}
+
+.blockTop{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.blockTitle{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.blockTime{
+  font-size:12px;
+  color: rgba(255,255,255,0.65);
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-radius:14px;
+  background: rgba(0,0,0,0.18);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.itemName{
+  font-weight:650;
+  font-size:13px;
+}
+
+.itemMeta{
+  font-size:12px;
+  color: rgba(255,255,255,0.65);
+  text-align:right;
+}
+
+/* ===================== */
+/* EMPTY STATE */
+/* ===================== */
+.empty{
+  padding:18px;
+  border-radius:18px;
+  border:1px dashed rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.75);
+  line-height:1.3;
+}
+
+/* ===================== */
+/* POST-WORKOUT FEEDBACK */
+/* ===================== */
+.postWorkout{
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,0.12);
+}
+
+.postTitle{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:16px;
+}
+
+.feedbackBlock{
+  margin-bottom:18px;
+}
+
+.feedbackLabel{
+  font-size:13px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom:8px;
+}
+
+.rating{
+  display:flex;
+  gap:12px;
+}
+
+.dot{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.35);
+  cursor:pointer;
+}
+
+.dot.active{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color:transparent;
+  box-shadow:0 0 10px rgba(0,255,213,0.6);
+}
+
+.weightRow{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.weightRow label{
+  font-size:13px;
+}
+
+.weightRow input{
+  width:80px;
+  background: rgba(0,0,0,0.35);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:10px;
+  padding:6px 8px;
+  color:white;
+  text-align:right;
+}
+
+.finishButton{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-weight:800;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+}
+
+/* ===================== */
+/* BOTTOM ACTION BAR */
+/* ===================== */
+.bottomBar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:14px 16px 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(2,8,20,0) 0%,
+    rgba(2,8,20,0.92) 35%,
+    rgba(2,8,20,0.98) 100%
+  );
+  display:flex;
+  justify-content:center;
+}
+
+.actionButton{
+  width:100%;
+  max-width:420px;
+  border:none;
+  border-radius:18px;
+  padding:16px;
+  font-size:16px;
+  font-weight:800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#001018;
+}
+
+.actionButton:disabled{
+  opacity:0.45;  cursor: not-allowed;}
+
+/* nutrition-specific secondary button variant */
+.actionButton.secondary {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.nutritionActions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* meal prep panel styling */
+.mealPrepPanel {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 16px;
+  background: var(--card);
+  border-radius: 26px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* extra spacing between breakfast and dinner sections */
+#mealPrepDinner {
+  margin-top: 20px;
+}
+
+.mealPrepPanel.hidden {
+  display: none;
+}
+
+.mealTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+}
+
+.mealInfo {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  min-height: 40px;
+}
+
+.mealButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.mealButtons .actionButton {
+  flex: 1;
+}
+
+/* shopping list container/button inherits actionButton styles */
+#shoppingContainer .actionButton {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* meal entry overlay uses inline styles, no additional CSS required */
+
+/* shopping list item rows */
+#shoppingList .shop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+#shoppingList .shop-row label {
+  flex: 1;
+}
+
+#shoppingList .shop-row input[type=checkbox] {
+  margin-left: 8px;
+  transform: scale(1.1);
+}
+
+.mealName {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+}
+
+.exploreBtn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+}
+
+.mealDetails {
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  white-space: pre-wrap;
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+  line-height: 1.4;
+}
+
+/* nutrition-specific secondary button variant */
+.actionButton.secondary {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+ 

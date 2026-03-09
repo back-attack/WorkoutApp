@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Trainer</title>
+
+  <link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/header.css">
+<link rel="stylesheet" href="styles/home.css">
+</head>
+
+<body class="app">
+
+  <!-- ===================== -->
+  <!-- HEADER -->
+  <!-- ===================== -->
+  <header class="header">
+    <div class="headerNav headerHome">
+
+      <!-- Left spacer (balances right icon) -->
+      <div class="navSpacer"></div>
+
+      <!-- Center logo -->
+      <div class="headerCenter">
+        <img class="logo" src="Designer.png" alt="AI Trainer Logo" />
+      </div>
+
+      <!-- Right profile button -->
+      <div class="navRight">
+        <a href="profile.html" class="navIcon" aria-label="Profile">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ===================== -->
+  <!-- HOME CONTENT -->
+  <!-- ===================== -->
+  <main class="homeMain">
+
+    <!-- Text box + greeting -->
+    <div class="homeTextBox">
+      <div id="homeGreeting" class="homeGreeting"></div>
+      <div id="quoteText">text</div>
+      <div id="quoteAuthor" class="quoteAuthor">—</div>
+    </div>
+
+    <!-- Date -->
+    <div class="homeDate" id="homeDate"></div>
+
+    
+    <!-- Notifications (NEW) -->
+    <section class="homeNotifs" id="homeNotifs" aria-label="Notifications"></section>
+
+
+    <!-- Navigation buttons -->
+    <div class="homeActions">
+      <a href="workouts.html" class="homeButton primary">
+        Workouts
+      </a>
+
+      <a href="nutrition.html" class="homeButton secondary">
+        Nutrition
+      </a>
+    </div>
+
+    <!-- DEBUG RESET (DEV ONLY) -->
+    <button
+      id="resetButton"
+      class="resetButton"
+    >
+      Reset Today (Debug)
+    </button>
+
+  </main>
+
+  <!-- QUOTE SCRIPT -->
+   <script>
+      // Date
+      const dateEl = document.getElementById("homeDate");
+      const today = new Date();
+
+      dateEl.textContent = today.toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+      });
+
+      // greeting based on time of day
+      const greetEl = document.getElementById("homeGreeting");
+      if (greetEl) {
+        const h = today.getHours();
+        let msg = "Good day";
+        if (h < 12) msg = "Good morning";
+        else if (h < 18) msg = "Good afternoon";
+        else msg = "Good evening";
+        greetEl.textContent = msg + ", welcome back!";
+      }
+    
+      // Daily motivational quote (Home only)
+      const DAILY_QUOTES = [
+        { text: "Win the first rep. Then win the next.", author: "AI Trainer Coach" },
+        { text: "Consistency beats intensity when intensity is inconsistent.", author: "AI Trainer Coach" },
+        { text: "You don’t rise to motivation — you fall to your habits.", author: "AI Trainer Coach" },
+        { text: "Train like it’s your job. Recover like it’s your advantage.", author: "AI Trainer Coach" },
+        { text: "Small steps daily. Big results eventually.", author: "AI Trainer Coach" }
+      ];
+    
+      function isoDayKey(d){
+        return d.toISOString().slice(0,10);
+      }
+    
+      function dailyIndex(dateStr, length){
+        let h = 0;
+        for (let i = 0; i < dateStr.length; i++) {
+          h = (h * 31 + dateStr.charCodeAt(i)) >>> 0;
+        }
+        return h % length;
+      }
+    
+      const idx = dailyIndex(isoDayKey(today), DAILY_QUOTES.length);
+      const q = DAILY_QUOTES[idx];
+    
+      document.getElementById("quoteText").textContent = `“${q.text}”`;
+      document.getElementById("quoteAuthor").textContent = `— ${q.author}`;
+
+      
+ // ==========================
+        // HOME NOTIFICATIONS (NEW)
+        // ==========================
+        const notifsEl = document.getElementById("homeNotifs");
+
+        function localDayKey(d) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          return `${y}-${m}-${day}`;
+        }
+      
+        // ISO week helpers (calendar week, Mon-Sun)
+        function getISOWeekKey(date) {
+          // Copy date in local time
+          const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+          // ISO week starts Monday; make Sunday = 7
+          const dayNum = d.getDay() || 7;
+          // Set to Thursday of current week to determine week-year
+          d.setDate(d.getDate() + 4 - dayNum);
+          const weekYear = d.getFullYear();
+          // Week 1 is the week with Jan 4th
+          const yearStart = new Date(weekYear, 0, 1);
+          const yearStartDay = yearStart.getDay() || 7;
+          const firstThursday = new Date(weekYear, 0, 1 + (4 - yearStartDay));
+          const diffDays = Math.round((d - firstThursday) / 86400000);
+          const weekNum = 1 + Math.floor(diffDays / 7);
+          return `${weekYear}-W${String(weekNum).padStart(2, "0")}`;
+        }
+      
+        function keyWorkoutDone(dayKey) {
+          return `aiTrainer_workoutDone_${dayKey}`;
+        }
+        function keyMealPrepDone(weekKey) {
+          return `aiTrainer_mealPrepDone_${weekKey}`;
+        }
+        function keyMealPrepDismiss(dayKey) {
+          return `aiTrainer_mealPrepDismiss_${dayKey}`;
+        }
+      
+        function isWorkoutDoneToday() {
+          const dayKey = localDayKey(today);
+          return localStorage.getItem(keyWorkoutDone(dayKey)) === "1";
+        }
+      
+        function isMealPrepDoneThisWeek() {
+          const wk = getISOWeekKey(today);
+          return localStorage.getItem(keyMealPrepDone(wk)) === "1";
+        }
+      
+        function isMealPrepDismissedToday() {
+          const dayKey = localDayKey(today);
+          return localStorage.getItem(keyMealPrepDismiss(dayKey)) === "1";
+        }
+      
+        function renderNotifs() {
+          notifsEl.innerHTML = "";
+        
+          const items = [];
+        
+          // 1) Workout reminder (if not done today)
+          if (!isWorkoutDoneToday()) {
+            items.push({
+              id: "workout",
+              text: "Don’t forget to workout today!",
+              meta: "Reminder",
+              actions: [] // no buttons for now
+            });
+          }
+        
+          // 2) Meal prep prompt (if not done this week AND not dismissed today)
+          if (!isMealPrepDoneThisWeek() && !isMealPrepDismissedToday()) {
+            items.push({
+              id: "mealprep",
+              text: "Would you like to start meal prepping?",
+              meta: "Weekly prep",
+              actions: [
+                { label: "Yes", kind: "primary", onClick: () => {
+                    const wk = getISOWeekKey(today);
+                    localStorage.setItem(keyMealPrepDone(wk), "1");
+                    renderNotifs();
+                  }
+                },
+                { label: "No", kind: "secondary", onClick: () => {
+                    const dayKey = localDayKey(today);
+                    localStorage.setItem(keyMealPrepDismiss(dayKey), "1");
+                    renderNotifs();
+                  }
+                }
+              ]
+            });
+          }
+        
+          // If none, hide container completely (clean home)
+          if (items.length === 0) {
+            notifsEl.style.display = "none";
+            return;
+          }
+          notifsEl.style.display = "flex";
+        
+          // Build UI
+          for (const n of items) {
+            const card = document.createElement("div");
+            card.className = "notif";
+          
+            const row = document.createElement("div");
+            row.className = "notifRow";
+          
+            const textWrap = document.createElement("div");
+            const text = document.createElement("div");
+            text.className = "notifText";
+            text.textContent = n.text;
+          
+            const meta = document.createElement("div");
+            meta.className = "notifMeta";
+            meta.textContent = n.meta;
+          
+            textWrap.appendChild(text);
+            textWrap.appendChild(meta);
+          
+            // Optional close for workout reminder (dismiss for the day)
+            const close = document.createElement("button");
+            close.className = "notifClose";
+            close.setAttribute("aria-label", "Dismiss notification");
+            close.textContent = "✕";
+            close.addEventListener("click", () => {
+              // For workout notif, dismiss just for today (doesn't mark workout done)
+              if (n.id === "workout") {
+                const dayKey = localDayKey(today);
+                localStorage.setItem(`aiTrainer_workoutDismiss_${dayKey}`, "1");
+              }
+              // For mealprep notif, same as "No" (dismiss for today)
+              if (n.id === "mealprep") {
+                const dayKey = localDayKey(today);
+                localStorage.setItem(keyMealPrepDismiss(dayKey), "1");
+              }
+              renderNotifs();
+            });
+          
+            row.appendChild(textWrap);
+            row.appendChild(close);
+          
+            card.appendChild(row);
+          
+            // Action buttons
+            if (n.actions && n.actions.length) {
+              const actions = document.createElement("div");
+              actions.className = "notifActions";
+            
+              for (const a of n.actions) {
+                const btn = document.createElement("button");
+                btn.className = a.kind === "secondary" ? "notifBtn secondary" : "notifBtn";
+                btn.type = "button";
+                btn.textContent = a.label;
+                btn.addEventListener("click", a.onClick);
+                actions.appendChild(btn);
+              }
+            
+              card.appendChild(actions);
+            }
+          
+            notifsEl.appendChild(card);
+          }
+        }
+      
+        // Workout dismissal check (optional)
+        function isWorkoutDismissedToday() {
+          const dayKey = localDayKey(today);
+          return localStorage.getItem(`aiTrainer_workoutDismiss_${dayKey}`) === "1";
+        }
+      
+        // Update render logic to respect workout dismiss
+        const originalIsWorkoutDoneToday = isWorkoutDoneToday;
+        function shouldShowWorkoutNotif() {
+          return !originalIsWorkoutDoneToday() && !isWorkoutDismissedToday();
+        }
+      
+        // Patch render: swap condition
+        const _renderNotifs = renderNotifs;
+        renderNotifs = function() {
+          notifsEl.innerHTML = "";
+          const items = [];
+        
+          if (shouldShowWorkoutNotif()) {
+            items.push({
+              id: "workout",
+              text: "Don’t forget to workout today!",
+              meta: "Reminder",
+              actions: []
+            });
+          }
+        
+          if (!isMealPrepDoneThisWeek() && !isMealPrepDismissedToday()) {
+            items.push({
+              id: "mealprep",
+              text: "Would you like to start meal prepping?",
+              meta: "Weekly prep",
+              actions: [
+                { label: "Yes", kind: "primary", onClick: () => {
+                    const wk = getISOWeekKey(today);
+                    localStorage.setItem(keyMealPrepDone(wk), "1");
+                    renderNotifs();
+                  }
+                },
+                { label: "No", kind: "secondary", onClick: () => {
+                    const dayKey = localDayKey(today);
+                    localStorage.setItem(keyMealPrepDismiss(dayKey), "1");
+                    renderNotifs();
+                  }
+                }
+              ]
+            });
+          }
+        
+          if (items.length === 0) {
+            notifsEl.style.display = "none";
+            return;
+          }
+          notifsEl.style.display = "flex";
+        
+          for (const n of items) {
+            const card = document.createElement("div");
+            card.className = "notif";
+          
+            const row = document.createElement("div");
+            row.className = "notifRow";
+          
+            const textWrap = document.createElement("div");
+            const text = document.createElement("div");
+            text.className = "notifText";
+            text.textContent = n.text;
+          
+            const meta = document.createElement("div");
+            meta.className = "notifMeta";
+            meta.textContent = n.meta;
+          
+            textWrap.appendChild(text);
+            textWrap.appendChild(meta);
+          
+            const close = document.createElement("button");
+            close.className = "notifClose";
+            close.setAttribute("aria-label", "Dismiss notification");
+            close.textContent = "✕";
+            close.addEventListener("click", () => {
+              if (n.id === "workout") {
+                const dayKey = localDayKey(today);
+                localStorage.setItem(`aiTrainer_workoutDismiss_${dayKey}`, "1");
+              }
+              if (n.id === "mealprep") {
+                const dayKey = localDayKey(today);
+                localStorage.setItem(keyMealPrepDismiss(dayKey), "1");
+              }
+              renderNotifs();
+            });
+          
+            row.appendChild(textWrap);
+            row.appendChild(close);
+            card.appendChild(row);
+          
+            if (n.actions && n.actions.length) {
+              const actions = document.createElement("div");
+              actions.className = "notifActions";
+            
+              for (const a of n.actions) {
+                const btn = document.createElement("button");
+                btn.className = a.kind === "secondary" ? "notifBtn secondary" : "notifBtn";
+                btn.type = "button";
+                btn.textContent = a.label;
+                btn.addEventListener("click", a.onClick);
+                actions.appendChild(btn);
+              }
+            
+              card.appendChild(actions);
+            }
+          
+            notifsEl.appendChild(card);
+          }
+        };
+      
+        // Initial render
+        renderNotifs();
+      
+        // --------------------------
+        // Home debug reset wiring
+        // --------------------------
+        const homeReset = document.getElementById("resetButton");
+        if (homeReset) {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get("debug") === "1") {
+            homeReset.classList.add("debug-visible");
+            homeReset.addEventListener("click", () => {
+              const today = new Date();
+              const dayKey = localDayKey(today);
+              const wk = getISOWeekKey(today);
+              localStorage.removeItem(`aiTrainer_workoutDone_${dayKey}`);
+              localStorage.removeItem(`aiTrainer_workoutDismiss_${dayKey}`);
+              localStorage.removeItem(`aiTrainer_mealPrepDone_${wk}`);
+              localStorage.removeItem(`aiTrainer_mealPrepDismiss_${dayKey}`);
+              window.location.reload();
+            });
+          }
+        }
+      </script>
+
+</body>
+</html>

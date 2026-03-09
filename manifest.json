@@ -1,0 +1,15 @@
+{
+  "name": "AI Trainer",
+  "short_name": "Trainer",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#020814",
+  "theme_color": "#00ffd5",
+  "icons": [
+    {
+      "src": "Designer.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

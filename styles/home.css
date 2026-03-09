@@ -1,0 +1,151 @@
+.homeMain {
+  max-width:420px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* =============================================================================
+   Home buttons (workouts/nutrition) should match the style of the bottom
+   action button on the workouts screen.  Using anchors, so make them behave
+   like buttons.                                                         */
+.homeActions {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.homeButton {
+  display: block;               /* anchor behaves like block-level button */
+  width: 100%;
+  max-width: 420px;
+  border: none;
+  border-radius: 18px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.homeButton:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.homeButton:active {
+  transform: scale(0.98);
+}
+
+.homeButton.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #001018;
+}
+
+.homeButton.secondary {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.homeTextBox {
+  padding:16px;
+  border-radius:18px;
+  background: rgba(255,255,255,0.08);
+  text-align:center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.homeGreeting {
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
+  color: rgba(255,255,255,0.9);
+}
+
+.homeDate {
+  text-align:center;
+  font-size:14px;
+  color: rgba(255,255,255,0.7);
+}
+
+.quoteAuthor{
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ===================== */
+/* HOME NOTIFICATIONS */
+/* ===================== */
+.homeNotifs{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.notif{
+  padding:14px 14px 12px;
+  border-radius:18px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.notifRow{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.notifText{
+  font-size:14px;
+  line-height:1.25;
+  color: rgba(255,255,255,0.9);
+}
+
+.notifMeta{
+  margin-top:8px;
+  font-size:12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.notifActions{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+}
+
+.notifBtn{
+  border:none;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  color:#001018;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+}
+
+.notifBtn.secondary{
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.9);
+}
+
+.notifClose{
+  border:none;
+  background:none;
+  color: rgba(255,255,255,0.65);
+  font-size:16px;
+  padding:6px 8px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.notifClose:active{
+  transform: scale(0.95);
+}
