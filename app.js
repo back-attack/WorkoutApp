@@ -8,6 +8,54 @@
  * Storage helpers (JSON)
  * localStorage stores strings; JSON stringify/parse lets us store objects. [2](https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem)
  ***********************/
+
+// simple client-side authentication (static password)
+const APP_PASSWORD = "letmein"; // change this as needed
+
+function isLoggedIn() {
+  return localStorage.getItem("loggedIn") === "1";
+}
+function requireLogin() {
+  if (!isLoggedIn()) {
+    const overlay = document.getElementById("loginOverlay");
+    if (overlay) overlay.style.display = "flex";
+  }
+}
+function setupAuth() {
+  const loginBtn = document.getElementById("loginBtn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      const pass = document.getElementById("loginPass").value;
+      if (pass === APP_PASSWORD) {
+        localStorage.setItem("loggedIn", "1");
+        document.getElementById("loginOverlay").style.display = "none";
+        // show logout now that we're in
+        const lb = document.getElementById("logoutBtn");
+        if (lb) lb.style.display = "inline-flex";
+      } else {
+        document.getElementById("loginError").textContent = "Incorrect password";
+      }
+    });
+  }
+  const loginInput = document.getElementById("loginPass");
+  if (loginInput) {
+    loginInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+  }
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    // hide initially if not logged
+    if (!isLoggedIn()) logoutBtn.style.display = "none";
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("loggedIn");
+      location.reload();
+    });
+  }
+}
+
 function setJSON(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
@@ -480,6 +528,10 @@ function setupDebugReset() {
  * Init
  ***********************/
 function init() {
+  // authentication
+  setupAuth();
+  requireLogin();
+
   // Always wire debug reset (it will early-return if button doesn't exist)
   setupDebugReset();
 

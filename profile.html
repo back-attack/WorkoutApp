@@ -136,6 +136,7 @@
         <a href="profile.html" class="navIcon" aria-label="Profile">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
         </a>
+        <button id="logoutBtn" class="navIcon" aria-label="Logout">⎋</button>
       </div>
     </div>
   </header>
@@ -175,6 +176,16 @@
         <button id="cancelEdit" class="actionButton secondary">Cancel</button>
         <button id="saveEdit" class="actionButton">Save</button>
       </div>
+    </div>
+  </div>
+
+  <!-- login overlay (protected) -->
+  <div id="loginOverlay" style="display:none;">
+    <div class="modal">
+      <label>Password</label>
+      <input type="password" id="loginPass" />
+      <button id="loginBtn" class="actionButton">Login</button>
+      <div id="loginError" style="color:var(--accent);margin-top:8px;font-size:14px;"></div>
     </div>
   </div>
 

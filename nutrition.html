@@ -64,6 +64,7 @@
             <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
           </svg>
         </a>
+        <button id="logoutBtn" class="navIcon" aria-label="Logout">⎋</button>
       </div>
 
     </div>
@@ -143,6 +144,16 @@
   <!-- meal data separate from logic -->
   <script src="nutrition-data.js"></script>
   <!-- include shared logic (renders week + debug reset) -->
+  <!-- login overlay (protected) -->
+  <div id="loginOverlay" style="display:none;">
+    <div class="modal">
+      <label>Password</label>
+      <input type="password" id="loginPass" />
+      <button id="loginBtn" class="actionButton">Login</button>
+      <div id="loginError" style="color:var(--accent);margin-top:8px;font-size:14px;"></div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 
 </body>
